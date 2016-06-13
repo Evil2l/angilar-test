@@ -1,0 +1,57 @@
+<h1 class="twitch-title">{{twitch.title}} Top {{twitch.quantity}} Streams</h1>
+<div>
+    <div class="btn-number-view">
+        Viewed Streams -
+        <div class="btn-group">
+            <button ng-click="twitch.quantity = 5" type="button" class="btn btn-primary" data-value="5">5</button>
+            <button ng-click="twitch.quantity = 10" type="button" class="btn btn-primary" data-value="10">10</button>
+            <button ng-click="twitch.quantity = 25" type="button" class="btn btn-primary" data-value="25">25</button>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>
+                <a ng-click="twitch.sortType = 'view'; twitch.sortReverse = !twitch.sortReverse">
+                    View
+                    <span ng-show="twitch.sortType == 'view' && !twitch.sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="twitch.sortType == 'view' && twitch.sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </th>
+            <th>
+                <a ng-click="twitch.sortType = 'game'; twitch.sortReverse = !twitch.sortReverse">
+                    Game Name
+                    <span ng-show="twitch.sortType == 'game' && !twitch.sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="twitch.sortType == 'game' && twitch.sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </th>
+            <th>
+                <a >
+                    Link
+                </a>
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr title="{{stream.channel.status}}"
+            ng-repeat="stream in twitchDb.streams | limitTo: twitch.quantity | orderBy:twitch.sortType:twitch.sortReverse">
+            <td>
+                <span ng-show="!stream.selected">{{ stream.viewers}}</span>
+                <input type="text" ng-model="stream.viewers" ng-show="stream.selected">
+            </td>
+            <td>
+                <span ng-show="!stream.selected"> {{ stream.game}}</span>
+                <input type="text" ng-model="stream.game" ng-show="stream.selected">
+            </td>
+            <td><a ng-href="{{stream.channel.url}}">Go watch</a></td>
+            <td>
+                <button ng-show="!stream.selected" ng-click="twitch.editRow(stream)" class="btn btn-primary">Edit</button>
+                <button ng-show="stream.selected" ng-click="twitch.saveRow(stream)" class="btn btn-primary">Save</button>
+                <button ng-show="stream.selected" ng-click="twitchDb.streams.splice($index, 1)" class="btn btn-danger">-</button>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>

@@ -1,0 +1,55 @@
+<h1>{{user.title}} dashboard</h1>
+<div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Enumerate
+                </a>
+
+            </th>
+            <th>
+                <a ng-click="user.sortType = 'name'; user.sortReverse = !user.sortReverse">
+                    Name
+                    <span ng-show="user.sortType == 'name' && !user.sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="user.sortType == 'name' && user.sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </th>
+            <th>
+                <a ng-click="user.sortType = 'hash'; user.sortReverse = !user.sortReverse">
+                    Pass
+                    <span ng-show="user.sortType == 'hash' && !user.sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="user.sortType == 'hash' && user.sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="data in usersDb | orderBy:user.sortType:user.sortReverse">
+            <td>{{ $index + 1 }}</td>
+            <td>
+                <span ng-show="!data.selected">{{ data.name }}</span>
+                <input type="text" ng-model="data.name" ng-show="data.selected">
+            </td>
+            <td>
+                <span ng-show="!data.selected">{{ data.$$hashKey }}</span>
+                <input type="text" ng-model="data.$$hashKey" ng-show="data.selected">
+            </td>
+            <td>
+
+                <button ng-show="!data.selected" ng-click="user.editRow(data)" class="btn btn-primary">Edit</button>
+                <button ng-show="data.selected" ng-click="user.saveRow(data)" class="btn btn-primary">Save</button>
+                <button ng-show="data.selected" ng-click="usersDb.splice($index, 1)" class="btn btn-danger">-</button>
+
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+    <button class="btn-primary" ng-click="user.sendChanges()">Send</button>
+    <button ng-click="user.addRow()" class="btn-info">Add Row</button>
+</div>
+
+

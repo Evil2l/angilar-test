@@ -1,0 +1,11 @@
+<form novalidate action="#" name="loginForm" ng-submit="
+							loginForm.$valid&&vm.userCheck()">
+    <input ng-model="vm.name" type="text" placeholder="Login" required>
+
+    <input ng-model="vm.pass" type="text" placeholder="Pass" required>
+
+    <button class="hidden" ng-click=""></button>
+    <p>
+        <span>{{vm.logErr}}</span>
+    </p>
+</form>

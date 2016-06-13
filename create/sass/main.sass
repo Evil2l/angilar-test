@@ -1,0 +1,119 @@
+$color-main: #f57c21
+$color-additional: #3ad114
+$font-main: 'pf_bulletin_sans_proregular', sans-serif
+$font-main-bold: 'pf_bulletin_sans_probold', sans-serif
+$font-main-medium: 'pf_bulletin_sans_promedium', sans-serif
+$font-main-light: 'pf_bulletin_sans_prolight', sans-serif
+$font-additional: "Calibri-Light", sans-serif
+/*error class for form*/
+.error
+  box-shadow: inset 1.5px 2.6px 7px rgba(137, 37, 37, 0.9) !important
+.error::-webkit-input-placeholder
+  color: #892525
+.error::-moz-placeholder
+  color: #892525
+/*/ Firefox 19+ /*/
+.error:-moz-placeholder
+  color: #892525
+/* Firefox 18- */
+.error:-ms-input-placeholder
+  color: #892525
+/*error class for form*/
+
+//!!!!!!!!!!!!!!!!!!END GLOBAL!!!!!!!!!!!!
+p, h1, h2, h3, h4, h5, h6
+  margin: 0
+fieldset
+  padding: 0
+  margin: 0
+*
+  max-height: 1000000px
+a
+  text-decoration: none
+  cursor: pointer
+  &:hover
+    text-decoration: none
+
+a, input, textarea, button
+  outline: none
+
+button
+  padding: 5px 30px
+  border-radius: 10px
+
+table
+  input
+    border: none
+    background: transparent
+
+.ng-invalid.ng-dirty
+  border-color: red
+
+.ng-valid.ng-dirty
+  border-color: green
+
+.hidden
+  display: none
+.inline
+  display: inline-block
+.relative
+  position: relative
+.twitch-title
+  float: left
+.btn-number-view
+  float: right
+.alert.alert-info
+  clear: both
+
+html
+  //overflow-x: hidden
+  -ms-text-size-adjust: 100%
+  -webkit-text-size-adjust: 100%
+
+  body
+    padding: 0
+    margin: 0
+    font: 400 16px $font-main
+    min-width: 1170px
+    //HEADER
+    header
+      height: 93px
+      position: relative
+    video
+      min-width: 100%
+      min-height: 100%
+      position: fixed
+      left: 0
+      top: 0
+      z-index: -1
+    .top-mnu
+      //max-width: 400px
+      background: rgba(158,158,158, 0.4)
+      margin: 15px auto
+      padding: 20px 30px
+      form
+        max-width: 400px
+        margin: 0 auto
+        background-color: silver
+        padding: 20px 40px
+      .private-header
+        background: rgba(250, 235, 215, 0.3)
+        img
+          width: 50px
+          height: 50px
+        .log-out
+          float: right
+
+      p
+        font-size: 17px
+        font-weight: 700
+        line-height: 24px
+        text-transform: uppercase
+        color: #6c6c6c
+        span
+          color: $color-main
+
+    footer
+      .navbar-fixed-bottom
+        background: grey
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1170" />
+    <meta name="description" content="Deshevle negde" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- inject:css -->
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="libs/styles/font-awesome.css">
+    <link rel="stylesheet" href="libs/bower-libs/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="libs/bower-libs/bootstrap/dist/css/bootstrap.min.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="logo.jpg" />
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body ng-app="myApp">
+<!--HEADER-->
+<video autoplay loop>
+    <source src="https://dl.dropboxusercontent.com/u/3465596/loops/loop.mp4" type="video/mp4">
+    <source src="https://dl.dropboxusercontent.com/u/3465596/loops/loop.ogg" type="video/ogg">
+    <source src="https://dl.dropboxusercontent.com/u/3465596/loops/loop.webm" type="video/webm">
+    Your browser does not support the <code>video</code> element.
+</video>
+<div ui-view></div>
+
+<!--BOWER LIBRARIES	-->
+<!-- bower:js -->
+<script src="libs/bower-libs/angular/angular.min.js"></script>
+<script src="libs/bower-libs/angular-ui-router.stateHelper/statehelper.min.js"></script>
+<script src="libs/bower-libs/ngstorage/ngStorage.min.js"></script>
+<script src="libs/bower-libs/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="libs/bower-libs/jquery/dist/jquery.min.js"></script>
+<script src="libs/bower-libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- endinject -->
+<!--additional LIBRARIES-->
+<!-- add-libs:js -->
+<!-- endinject -->
+<!--ANGULAR LIBRARIES-->
+<!--modules:js-->
+<script src="js/app.js"></script>
+<!-- endinject -->
+<!-- controllers:js -->
+<script src="js/controllers/dashboard-controller.js"></script>
+<script src="js/controllers/MainController.js"></script>
+<script src="js/controllers/role-controller.js"></script>
+<script src="js/controllers/twitch-controller.js"></script>
+<script src="js/controllers/user-controller.js"></script>
+<!-- endinject -->
+<!-- services:js -->
+<script src="js/services/login-check.js"></script>
+<script src="js/services/login.js"></script>
+<script src="js/services/table-service.js"></script>
+<!-- endinject -->
+<!-- directives:js -->
+<script src="js/directives/private-content.js"></script>
+<script src="js/directives/private-header.js"></script>
+<script src="js/directives/private-sidebar.js"></script>
+<!-- endinject -->
+
+
+
+</body>
+</html>

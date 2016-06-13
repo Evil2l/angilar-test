@@ -1,0 +1,29 @@
+{
+  "user": [
+    {
+      "id": 0,
+      "name": "admin",
+      "password": "admin",
+      "token": "qwerty_admin"
+    },
+    {
+      "id": 1,
+      "name": "trader",
+      "password": "trader",
+      "token": "qwerty_user"
+    },
+    {
+      "id": 2,
+      "name": "reader",
+      "password": "reader",
+      "token": "qwerty_user"
+    },
+    {
+      "id": 3,
+      "name": "user",
+      "password": "user",
+      "token": "qwerty_user",
+      "selected": false
+    }
+  ]
+}

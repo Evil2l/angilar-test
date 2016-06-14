@@ -4,16 +4,18 @@ var gulp = require('gulp'),
     pngquant = require('imagemin-pngquant'),
     prefixer = require('gulp-autoprefixer'),
     uglify = require('gulp-uglify'),
-    sass = require('gulp-sass'),   
+    sass = require('gulp-sass'),
     cssmin = require('gulp-minify-css'),
     browserSync = require("browser-sync"),
     gutil = require('gulp-util'),
     uncss = require('gulp-uncss'),
     inject = require('gulp-inject'), // include libraries css and js
-    mainBowerFiles = require('main-bower-files'),
     mainBowerGulp = require('gulp-main-bower-files'),
     stylus = require('gulp-stylus'),
     es = require('event-stream'),
+    plumber = require('gulp-plumber'), // Show when error stoped process
+    notify = require('gulp-notify'), //Using with plumber for showing error
+    jsonServer = require('gulp-json-srv'),
     reload = browserSync.reload;
 
 //------------- path describe
@@ -70,22 +72,42 @@ var config = {
     logPrefix: "EvilTool"
 };
 //-------------
+// Error function
 
+var reportError = function (error) {
+    var lineNumber = (error.lineNumber) ? 'LINE ' + error.lineNumber + ' -- ' : '';
+
+    notify({
+        title: 'Task Failed [' + error.plugin + ']',
+        message: lineNumber + 'See console.',
+        sound: 'Sosumi' // See: https://github.com/mikaelbr/node-notifier#all-notification-options-with-their-defaults
+    }).write(error);
+
+    gutil.beep(); // Beep 'sosumi' again
+    var report = '';
+    var chalk = gutil.colors.white.bgRed;
+
+    report += chalk('TASK:') + ' [' + error.plugin + ']\n';
+    report += chalk('PROB:') + ' ' + error.message + '\n';
+    if (error.lineNumber) {
+        report += chalk('LINE:') + ' ' + error.lineNumber + '\n';
+    }
+    if (error.fileName) {
+        report += chalk('FILE:') + ' ' + error.fileName + '\n';
+    }
+    console.error(report);
+
+    // Prevent the 'watch' task from stopping
+    this.emit('end');
+};
 
 //************* project build *************
-// Bower libraries create
 
-//basic usage
-//gulp.task('bower:build', function() {
-//    return gulp.src(mainBowerGulp())
-//        .pipe(gulp.dest('create/check/'));
-//});
-
-gulp.task('bower:build', function() {
+gulp.task('bower:build', function () {
     return gulp.src('./bower.json')
         .pipe(mainBowerGulp({
             overrides: {
-                "jquery":{
+                "jquery": {
                     main: 'dist/*.min.js'
                 },
                 "bootstrap": {
@@ -95,16 +117,16 @@ gulp.task('bower:build', function() {
                         './dist/fonts/*.*'
                     ]
                 },
-                "angular":{
+                "angular": {
                     main: './*.min.js'
                 },
-                "angular-ui-router":{
+                "angular-ui-router": {
                     main: './**/*.min.js'
                 },
-                "ngstorage":{
+                "ngstorage": {
                     main: './**/*.min.js'
                 },
-                "angular-ui-router.stateHelper":{
+                "angular-ui-router.stateHelper": {
                     main: './*.min.js'
                 }
             }
@@ -117,7 +139,7 @@ gulp.task('bower:build', function() {
 
 gulp.task('index:build', function () {
 
-    var injectFunk = function(path, name){
+    var injectFunk = function (path, name) {
         return (inject(gulp.src([path], {read: false}),
             //Options
             {
@@ -153,35 +175,47 @@ gulp.task('html:build', function () {
 // SASS task
 
 gulp.task('style:build', function () {
-    gulp.src(path.create.style) //Выберем наш main.scss       
+    gulp.src(path.create.style) //Выберем наш main.scss
+        .pipe(plumber({
+            errorHandler: reportError
+        }))
         .pipe(sass()) //Скомпилируем
         //.pipe(uncss({html: ['production/index.html']}))
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
         .pipe(gulp.dest(path.production.css)) //И в build 
-        .pipe(reload({stream: true}));     
+        .pipe(reload({stream: true}))
+        .on('error', reportError);
 });
 
 // js task
 
 gulp.task('js:build', function () {
-    gulp.src(path.create.js) //Найдем наш main файл        
+    gulp.src(path.create.js) //Найдем наш main файл
+        .pipe(plumber({
+            errorHandler: reportError
+        }))
         //.pipe(uglify().on('error', gutil.log)) - minify JS files
         .pipe(gulp.dest(path.production.js)) //Выплюнем готовый файл в production 
-        .pipe(reload({stream: true}));     
+        .pipe(reload({stream: true}))
+        .on('error', reportError);
 });
 
 // image task
 
 gulp.task('image:build', function () {
     gulp.src(path.create.img) //Выберем наши картинки
+        .pipe(plumber({
+            errorHandler: reportError
+        }))
         .pipe(imagemin({ //Сожмем их
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
             use: [pngquant()],
             interlaced: true
         }))
-        .pipe(gulp.dest(path.production.img)); //И бросим в production
+        .pipe(gulp.dest(path.production.img)) //И бросим в production
+        .on('error', reportError);
 });
 
 // libs task
@@ -202,6 +236,7 @@ gulp.task('fonts:build', function () {
 
 gulp.task('allcss:build', function () {
     gulp.src(path.create.allcss) //Выберем все файлы css
+        .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
         //.pipe(uncss({html: ['production/index.html']}))
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
@@ -212,8 +247,8 @@ gulp.task('allcss:build', function () {
 gulp.task('build', [
     'bower:build',
     'index:build',
-    'html:build',     
-    'style:build',    
+    'html:build',
+    'style:build',
     //'image:build',
     'js:build',
     'fonts:build',
@@ -227,34 +262,39 @@ gulp.task('webserver', function () {
     browserSync(config);
 });
 
+//------------- JSON server
+
+gulp.task('json', function () { //https://www.npmjs.com/package/gulp-json-srv
+    jsonServer.start(); // start serving 'db.json' on port 3000
+});
 //------------- watch config
 
-gulp.task('watch', function(){  
-    watch([path.watch.libs], function() {
+gulp.task('watch', function () {
+    watch([path.watch.libs], function () {
         gulp.start('index:build');
         //gulp.start('libs:build');
     });
-    watch([path.watch.html], function() {
+    watch([path.watch.html], function () {
         gulp.start('html:build');
     });
-    watch([path.watch.style], function() {
+    watch([path.watch.style], function () {
         gulp.start('style:build');
     });
-    watch([path.watch.js], function() {
+    watch([path.watch.js], function () {
         gulp.start('js:build');
     });
-    watch([path.watch.img], function() {
+    watch([path.watch.img], function () {
         gulp.start('image:build');
     });
-    watch([path.watch.fonts], function() {
+    watch([path.watch.fonts], function () {
         gulp.start('fonts:build');
     });
-    watch([path.watch.allcss], function() {
+    watch([path.watch.allcss], function () {
         gulp.start('allcss:build');
     });
 });
 
-gulp.task('default', ['build', 'webserver', 'watch']);
+gulp.task('default', ['build', 'webserver', 'json', 'watch']);
 
 //gulp uncss
 gulp.task('uncss', function () {
